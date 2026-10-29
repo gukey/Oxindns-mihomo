@@ -1,0 +1,14 @@
+# 可选片段：替换完整配置中的 tun 块，先阅读部署文档并准备回退。
+# 不在安装时启用；不同 ROM / 内核需单独验证。不含热点共享脚本。
+tun:
+  enable: true
+  device: netpanel-tun
+  stack: mixed
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  exclude-uid:
+    - 0

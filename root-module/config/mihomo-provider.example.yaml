@@ -1,0 +1,17 @@
+# 独立参考片段，不能直接覆盖完整 mihomo.yaml。
+# 只在本机填写自己的订阅，不提交配置或订阅缓存。
+proxy-providers:
+  personal:
+    type: http
+    url: "https://subscription.example.invalid/replace-with-your-own-subscription"
+    path: ./providers/personal.yaml
+    interval: 86400
+    health-check:
+      enable: false
+proxy-groups:
+  - name: "节点选择"
+    type: select
+    proxies:
+      - DIRECT
+    use:
+      - personal

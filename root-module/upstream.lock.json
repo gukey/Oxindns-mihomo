@@ -1,0 +1,38 @@
+[
+  {
+    "component": "oxidns",
+    "url": "https://github.com/svenshi/oxidns/releases/download/v1.6.1/oxidns-aarch64-unknown-linux-musl.tar.gz",
+    "filename": "oxidns-aarch64-unknown-linux-musl.tar.gz",
+    "sha256": "d879d4b9199c5c911d296af4df8d9e974523fb98a6ee2418ae7274d152365e42",
+    "version": "v1.6.1",
+    "repository": "https://github.com/svenshi/oxidns",
+    "commit": "76259263122c60b2868cb78cd14ea7e6cb990c32",
+    "source_url": "https://codeload.github.com/svenshi/oxidns/tar.gz/76259263122c60b2868cb78cd14ea7e6cb990c32",
+    "source_filename": "oxidns-v1.6.1-source.tar.gz",
+    "source_sha256": "e1185fd975ed0be9adb5181e3843e2fbe545897bfb538d9dfd41cb003c0abac2"
+  },
+  {
+    "component": "mihomo",
+    "url": "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-android-arm64-v8-v1.19.33.gz",
+    "filename": "mihomo-android-arm64-v8-v1.19.33.gz",
+    "sha256": "2ddbd3aaa884f52b4568f406876ec81dddeef9f1bb67b90d4004d356e2c6a708",
+    "version": "v1.19.33",
+    "repository": "https://github.com/MetaCubeX/mihomo",
+    "commit": "3f27ef39f8c96bbfbc8b0b9bb10f5c9ef60149d8",
+    "source_url": "https://codeload.github.com/MetaCubeX/mihomo/tar.gz/3f27ef39f8c96bbfbc8b0b9bb10f5c9ef60149d8",
+    "source_filename": "mihomo-v1.19.33-source.tar.gz",
+    "source_sha256": "ecda5f8c8a8a1d60bc088c2640c85d92c8f002c0686234a26bdf671735afe216"
+  },
+  {
+    "component": "metacubexd",
+    "url": "https://github.com/MetaCubeX/metacubexd/releases/download/v1.273.1/compressed-dist.tgz",
+    "filename": "compressed-dist.tgz",
+    "sha256": "a178e00b67acabcda2dcef00afa90be6a7bb261e466a67dad58c8478d9553603",
+    "version": "v1.273.1",
+    "repository": "https://github.com/MetaCubeX/metacubexd",
+    "commit": "8bbc8f58fef71148a94fb5c0ff808f79b057337d",
+    "source_url": "https://codeload.github.com/MetaCubeX/metacubexd/tar.gz/8bbc8f58fef71148a94fb5c0ff808f79b057337d",
+    "source_filename": "metacubexd-v1.273.1-source.tar.gz",
+    "source_sha256": "d4d0d5b98a1b152c319777c196da8d9e11338ce6a729fd8c32a25f7b1eae94e5"
+  }
+]

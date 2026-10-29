@@ -1,0 +1,34 @@
+# 通用配置：不含个人域名、节点、订阅。安装时生成随机密码。
+log:
+  level: warn
+api:
+  http:
+    listen: "127.0.0.1:9199"
+    auth:
+      type: basic
+      username: netpanel
+      password: "__DNS_PASSWORD__"
+    webui:
+      root: "./webui"
+plugins:
+  - tag: upstream
+    type: forward
+    args:
+      upstreams:
+        - addr: "udp://223.5.5.5:53"
+        - addr: "udp://119.29.29.29:53"
+  - tag: main
+    type: sequence
+    args:
+      - exec: $upstream
+      - exec: accept
+  - tag: udp
+    type: udp_server
+    args:
+      entry: main
+      listen: "127.0.0.1:5335"
+  - tag: tcp
+    type: tcp_server
+    args:
+      entry: main
+      listen: "127.0.0.1:5335"

@@ -1,0 +1,6 @@
+id=netpanel_services
+name=NetPanel OxiDNS + Mihomo
+version=0.1.3
+versionCode=13
+author=gukey
+description=独立目录启动 OxiDNS 与 Mihomo，附官方 WebUI；默认不接管系统流量，不含节点或订阅。

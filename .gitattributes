@@ -3,3 +3,13 @@
 *.bat text eol=crlf
 *.jar binary
 *.png binary
+*.sh text eol=lf
+/root-module/META-INF/com/google/android/update-binary text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+/root-module/module.prop text eol=lf
+/root-module/META-INF/com/google/android/updater-script text eol=lf
+/root-module/licenses/* text eol=lf
+/root-module/LICENSE text eol=lf

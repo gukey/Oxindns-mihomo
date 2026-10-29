@@ -2,6 +2,14 @@
 
 轻量 Android 原生管理容器：**概览 / DNS / 代理**。管理已有 OxiDNS（YoPilot）与 Mihomo（MetaCubeXD），不启动或修改服务核心，不提供 VPN。
 
+## 下载与部署
+
+- [Releases：APP 与配套 Root 模块](https://github.com/gukey/Oxindns-mihomo/releases)
+- [完整中文部署流程](docs/DEPLOYMENT.md)：安装、通用配置、认证、APP 对接、自己导入节点、可选 TUN、升级与回退。
+- [通用配置文件](root-module/config) / [发布验证记录](docs/RELEASE-0.1.3.md) / [第三方来源与许可证](docs/THIRD_PARTY.md)
+
+APP 本身不需要 Root，也不启动核心；**可选的独立 Root 模块**负责开机启动。默认配置不含节点和订阅，仅 DIRECT，不自动接管手机流量。模块带官方 OxiDNS WebUI，不复制设备上的 YoPilot 定制版本。模块仅支持 arm64，首次发布标记为预发布，实际验收范围见验证记录。
+
 ## 0.1.3 首页单屏布局
 
 - 首页取消纵向滚动，资源、运行时长分别合并到顶部 OxiDNS / Mihomo 卡片；去掉独立资源区、重复状态卡、快捷操作和事件列表。卡片可直接打开对应管理页，顶部保留刷新入口。

@@ -1,0 +1,33 @@
+# 无节点也可校验和启动，默认 DIRECT；由使用者自行导入合法获得的节点。
+mixed-port: 7890
+allow-lan: false
+bind-address: "127.0.0.1"
+mode: rule
+log-level: warning
+ipv6: false
+external-controller: "127.0.0.1:9090"
+secret: "__MIHOMO_SECRET__"
+external-ui: "./ui"
+profile:
+  store-selected: true
+dns:
+  enable: true
+  listen: "127.0.0.1:1053"
+  ipv6: false
+  enhanced-mode: redir-host
+  default-nameserver:
+    - 223.5.5.5
+  nameserver:
+    - udp://127.0.0.1:5335
+  proxy-server-nameserver:
+    - udp://127.0.0.1:5335
+tun:
+  enable: false
+proxies: []
+proxy-groups:
+  - name: "节点选择"
+    type: select
+    proxies:
+      - DIRECT
+rules:
+  - MATCH,节点选择

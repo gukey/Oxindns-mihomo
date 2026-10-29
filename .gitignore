@@ -12,3 +12,7 @@ dist/
 .env.*
 key.txt
 **/key.txt
+__pycache__/
+*.pyc
+/root-module/bin/
+/root-module/web/
