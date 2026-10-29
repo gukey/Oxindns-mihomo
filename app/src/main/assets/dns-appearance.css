@@ -1,0 +1,29 @@
+/* App-local presentation only. Keep the upstream DOM, events and navigation intact. */
+:root {
+  --font-body-active: "Noto Sans CJK SC", "Noto Sans SC", sans-serif !important;
+  --font-heading-active: "Noto Sans CJK SC", "Noto Sans SC", sans-serif !important;
+}
+html body, html body * {
+  font-family: "Noto Sans CJK SC", "Noto Sans SC", sans-serif !important;
+}
+/* YoPilot's global input styles otherwise draw a second box inside the search bar. */
+html body .cmd-search-bar #global-search-input {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+html body .cmd-search-bar .cmd-search-left { min-width: 0; flex: 1; }
+html body .cmd-search-bar:focus-within { outline: 2px solid var(--accent, #00875f); outline-offset: 2px; }
+/* On the YoPilot overview, start with request cards. Keep its navigation and other pages. */
+html body #page-content .ypo-service { display: none !important; }
+html body:has(#page-content .ypo-statistics) .top-header-grid { display: none !important; }
+html body #page-content .ypo-statistics { display: flex; flex-direction: column; }
+html body #page-content .ypo-statistics .ypo-scope-note { order: 1; margin-top: 12px; }

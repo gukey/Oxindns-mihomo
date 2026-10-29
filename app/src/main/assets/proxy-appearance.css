@@ -1,0 +1,13 @@
+/* Flatten MetaCubeXD's raised More button without clipping its popup menu. */
+nav[aria-label="Mobile bottom navigation"] button[aria-label="More menu"] {
+  top: 0 !important;
+  width: 44px !important;
+  height: 44px !important;
+  margin-bottom: 12px !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+nav[aria-label="Mobile bottom navigation"] button[aria-label="More menu"] svg {
+  width: 20px !important;
+  height: 20px !important;
+}
