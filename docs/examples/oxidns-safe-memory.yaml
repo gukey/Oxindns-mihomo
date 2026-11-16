@@ -1,0 +1,70 @@
+# 回环验证示例，不可整份覆盖生产配置。
+# 仅用于公网 DNS 分支；局域网 hosts/内部域名应在外层单独处理。
+# 此配置保存短期 DNS 应答，不会学习或修改域名路由。
+api:
+  http:
+    listen: 127.0.0.1:19494
+log:
+  level: error
+plugins:
+  - tag: non_public_or_fake
+    type: resp_ip
+    args:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 100.64.0.0/10
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.0.0.0/24
+      - 192.0.2.0/24
+      - 192.168.0.0/16
+      - 198.18.0.0/15
+      - 198.51.100.0/24
+      - 203.0.113.0/24
+      - 224.0.0.0/4
+      - 240.0.0.0/4
+      - ::/96
+      - ::ffff:0:0/96
+      - fc00::/7
+      - fe80::/10
+      - ff00::/8
+      - 2001:db8::/32
+  - tag: short_real_memory
+    type: cache
+    args:
+      size: 4096
+      short_circuit: true
+      cache_negative: false
+      min_positive_ttl: 1
+      max_positive_ttl: 300
+      ecs_in_key: true
+      # 不设置 lazy_cache_ttl：到期后不提供过期应答。
+      # 不设置 dump_file：重启后不恢复这份短期记忆。
+  - tag: trusted_real_dns
+    type: forward
+    args:
+      concurrent: 2
+      response_selection: balanced
+      upstreams:
+        - addr: https://dns.alidns.com/dns-query
+          dial_addr: 223.5.5.5
+          timeout: 5s
+          enable_http3: false
+        - addr: https://doh.pub/dns-query
+          dial_addr: 1.12.12.12
+          timeout: 5s
+          enable_http3: false
+  - tag: public_memory_sequence
+    type: sequence
+    args:
+      - exec: $short_real_memory
+      - exec: $trusted_real_dns
+      - matches: $non_public_or_fake
+        exec: reject 2
+      - exec: accept
+  - tag: tcp_test_only
+    type: tcp_server
+    args:
+      listen: 127.0.0.1:15494
+      entry: public_memory_sequence
