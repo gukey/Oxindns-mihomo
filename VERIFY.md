@@ -1,4 +1,19 @@
-# NetPanel 0.1.3 实际验证记录
+# NetPanel 0.1.4 实际验证记录
+
+日期：2026-11-17。包名 `dev.netpanel`，versionCode 5。
+
+- `assembleDebug`、`testDebugUnitTest`、`lintDebug`、`assembleDebugAndroidTest` 全部通过；13 项单元测试通过，Lint 0 错误、8 项既有警告。
+- 5 项真机测试通过（6.275 秒）：OxiDNS 和 Mihomo 真实接口、新 DNS 面板加载与主题切换、真实网页双向主体侧滑、嵌套横向控件/输入框手势优先、MetaCubeXD 更多按钮边界。已修正测试在 WebView 尚未完成布局时发手势的时序问题。
+- 单文件面板来自 `gukey/oxidns-dashboard` 提交 `5d10bd0`。TypeScript / Vite 构建与 6 项 Playwright 测试通过，覆盖五种主题、存储受限、小屏弹层、跟随系统、规则批量去重/编辑/移除、版本冲突、不可达、任务失败与输出转义。
+- 通过 ADB 转发连接手机真实 API，验证概览、查询页、五种外观与强制转发读取，现有 3 条规则可读，无 JavaScript 页面异常。生产环境未测试增删改；写入路径只在隔离接口中测试，避免改变现有路由。
+- 新面板已部署到原 WebUI 根目录，HTTP 返回与本机构建逐字节一致；HTML 为 192,404 字节，SHA-256：`2bae56c54b51885c50c793b1f42cc4153bbf531632e3e429c83791426de04b6d`。
+- 在线 YoPilot 页面与静态资源已移除，完整旧目录只在 WebUI 根目录之外保留回退备份。原规则更新脚本仍生成 `rule-update-status.json`，面板不依赖该文件；发布 UI 仍为单个 HTML。
+- OxiDNS、Mihomo 配置及强制转发规则状态文件的迁移前后 SHA-256 相同，未重启核心。`/api/health` 返回 `ok`。
+- NetPanel 已通过 ADB 覆盖安装，保留原配置；APK v2 签名验证通过，SHA-256：`991a30f60a1be60b550b47e7142cf507ac8c67b5e102442b7197311985a9e66d`。
+
+交付文件位于本机 `dist/release-0.1.4/`，报告位于 `dist/reports/0.1.4/`。本轮完成目标手机竖屏验证，未覆盖横屏、超大字体和跨 Android 版本矩阵。0.1.3 通用 Root 安装包保持原版本；独立强制转发后端不是面板构建产物，新部署须另行安装配套服务。
+
+## 0.1.3 历史验证记录
 
 日期：2026-10-29。包名 `dev.netpanel`，versionCode 4。
 

@@ -1,6 +1,6 @@
 # NetPanel
 
-轻量 Android 原生管理容器：**概览 / DNS / 代理**。管理已有 OxiDNS（YoPilot）与 Mihomo（MetaCubeXD），不启动或修改服务核心，不提供 VPN。
+轻量 Android 原生管理容器：**概览 / DNS / 代理**。管理已有 OxiDNS（OxiDNS Dashboard）与 Mihomo（MetaCubeXD），不启动或修改服务核心，不提供 VPN。
 
 ## 下载与部署
 
@@ -16,6 +16,13 @@
 
 APP 本身不需要 Root，也不启动核心；**可选的独立 Root 模块**负责开机启动。默认配置不含节点和订阅，仅 DIRECT，不自动接管手机流量。模块带官方 OxiDNS WebUI，不复制设备上的 YoPilot 定制版本。模块仅支持 arm64，首次发布标记为预发布，实际验收范围见验证记录。
 
+## 0.1.4 DNS 面板替换
+
+- DNS 页面加载 [OxiDNS Dashboard](https://github.com/gukey/oxidns-dashboard)，手机浏览器与 APP 访问同一份单文件页面。构建、替换与回退方法见 [面板部署说明](docs/DASHBOARD.md)。
+- 移除 APP 中 YoPilot 专用字体、搜索框及概览隐藏样式，避免干扰新面板外观。字体由面板统一设置，五种风格、浅色/深色/跟随系统由网页自身管理。
+- 新面板加入强制转发入口，复用现有手机 9198 服务与已有规则；不另建后端。旧 YoPilot 从在线目录移除，备份保存在静态服务目录之外。
+- 此次替换针对已有手机部署。0.1.3 通用 Root 安装包仍包含其锁定的官方 WebUI，不会自动升级为新面板；可按部署说明单独替换，不改变核心版本与配置。
+
 ## 0.1.3 首页单屏布局
 
 - 首页取消纵向滚动，资源、运行时长分别合并到顶部 OxiDNS / Mihomo 卡片；去掉独立资源区、重复状态卡、快捷操作和事件列表。卡片可直接打开对应管理页，顶部保留刷新入口。
@@ -23,7 +30,7 @@ APP 本身不需要 Root，也不启动核心；**可选的独立 Root 模块**�
 - Mihomo 内存复用真实 `/connections` 的 `memory` 字节快照，按设置的概览刷新周期更新，无新增轮询端点。依据 [官方 Snapshot 结构](https://github.com/MetaCubeX/mihomo/blob/Meta/tunnel/statistic/manager.go)。当前已核实接口不提供 Mihomo CPU、运行时长，明确显示“接口未提供”；不以 APP 运行时间或手机总 CPU 冒充核心资源。
 - `AGENTS.md` / `agnet.md` 记录仓库地址、验证后自动提交推送及中文描述约定；本地 `key.txt` 已忽略，凭据不随源码交付。
 
-## 0.1.2 页面侧滑与 DNS 显示
+## 0.1.2 页面侧滑与 DNS 显示（历史版本）
 
 - 概览、DNS、代理均可在主体区域左右侧滑，按相邻栏目切换；错误页和未配置页同样支持。
 - WebView 仅对明确横向的单指短滑切栏。只读检查起点的 DOM，横向滚动区域、输入控件、滑块、画布及 iframe 优先处理自身手势；无法完成检查时交给网页。移除旧版底部滑动提示条，网页填满内容区，也可点击底部栏目切换。设置支持关闭侧滑。
@@ -69,7 +76,7 @@ APP 本身不需要 Root，也不启动核心；**可选的独立 Root 模块**�
 | `PanelUi.kt` | 原生概览、60 秒流量图、三栏导航及 WebView 容器 |
 | `SettingsUi.kt` | 服务、主题、启动栏目、刷新频率和缓存设置 |
 | `WebPanel.kt` / `SwipeWebView.kt` | 两个 Activity 持有的 WebView、导航、认证、手势仲裁及状态保存 |
-| `assets/dns-appearance.css` | DNS 固定黑体和 YoPilot 搜索框样式修正 |
+| `assets/proxy-appearance.css` | MetaCubeXD 更多按钮边界修正；DNS 外观由部署的面板自身管理 |
 | `MainActivity.kt` | 生命周期、系统文件选择和文档下载 |
 | `PanelViewModel.kt` | StateFlow、前台按需轮询、退避、网络恢复、有限事件观察 |
 | `ServiceApi.kt` | 只读真实 API、带 Bearer 请求头的流量 WebSocket |

@@ -18,6 +18,23 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class WebGestureTest {
+    private fun awaitViewport(web: WebView) {
+        val instrument = InstrumentationRegistry.getInstrumentation()
+        val deadline = SystemClock.uptimeMillis() + 10000
+        var ready = false
+        while (!ready && SystemClock.uptimeMillis() < deadline) {
+            val done = CountDownLatch(1)
+            instrument.runOnMainSync {
+                web.evaluateJavascript("innerWidth > 0 && innerHeight > 0") {
+                    ready = it == "true" && web.width > 0 && web.height > 0
+                    done.countDown()
+                }
+            }
+            assertTrue(done.await(5, TimeUnit.SECONDS))
+            if (!ready) SystemClock.sleep(100)
+        }
+        assertTrue("WebView must have a measured viewport before gesture tests", ready)
+    }
     @Test fun configuredProxyMoreButtonStaysInsideBottomBar() {
         val instrument = InstrumentationRegistry.getInstrumentation()
         val settings = runBlocking { SettingsStore(instrument.targetContext).settings.first() }
@@ -54,7 +71,7 @@ class WebGestureTest {
         } finally { instrument.runOnMainSync { (web.parent as? ViewGroup)?.removeView(web) } }
     }
 
-    @Test fun configuredDnsUsesSingleSearchBorderAndSansFont() {
+    @Test fun configuredDnsUsesDashboardThemeAndSansFont() {
         val instrument = InstrumentationRegistry.getInstrumentation()
         val settings = runBlocking { SettingsStore(instrument.targetContext).settings.first() }
         assertTrue("Configure DNS Web address before live test", settings.dnsWeb.isNotBlank())
@@ -73,10 +90,9 @@ class WebGestureTest {
             instrument.runOnMainSync {
                 web.evaluateJavascript("""
                     (() => {
-                      const input = document.querySelector('.cmd-search-bar #global-search-input');
-                      return !!input && !!document.getElementById('netpanel-dns-appearance') &&
-                        getComputedStyle(input).borderTopWidth === '0px' &&
-                        getComputedStyle(input).backgroundColor === 'rgba(0, 0, 0, 0)' &&
+                      return !!document.querySelector('#side a[data-path="force-forward"]') &&
+                        !!document.querySelector('#btn-style') &&
+                        !document.getElementById('netpanel-dns-appearance') &&
                         getComputedStyle(document.body).fontFamily.includes('sans-serif');
                     })()
                 """.trimIndent()) { ready = it == "true"; done.countDown() }
@@ -84,7 +100,8 @@ class WebGestureTest {
             assertTrue(done.await(5, TimeUnit.SECONDS))
             if (!ready) SystemClock.sleep(200)
         }
-        assertTrue("Real YoPilot search CSS and fixed sans-serif font did not apply", ready)
+        assertTrue("New DNS dashboard did not load or legacy CSS is still injected", ready)
+        awaitViewport(web)
         val swipeWeb = web as SwipeWebView
         val directions = mutableListOf<Int>()
         instrument.runOnMainSync {
@@ -97,7 +114,14 @@ class WebGestureTest {
             assertTrue(done.await(5, TimeUnit.SECONDS))
             return value
         }
-        val point = org.json.JSONArray(js("(() => {const r=document.querySelector('.ypo-statistics').getBoundingClientRect();return [(r.top+40)/innerHeight,innerWidth]})()"))
+        // Exercise the dashboard's own header picker in the actual Android WebView.
+        js("document.getElementById('btn-style').click();true")
+        for (style in listOf("bento", "liquid", "brutal", "shadcn")) {
+            js("document.querySelector('[data-style-pick=\"$style\"]').click();true")
+            assertEquals("\"$style\"", js("document.documentElement.dataset.style"))
+        }
+        js("document.getElementById('btn-style').click();true")
+        val point = org.json.JSONArray(js("(() => {const r=document.querySelector('#ov-stats').getBoundingClientRect();return [(r.top+40)/innerHeight,innerWidth]})()"))
         try {
             for (left in listOf(true, false)) {
                 val start = SystemClock.uptimeMillis()
@@ -117,7 +141,7 @@ class WebGestureTest {
         } finally { instrument.runOnMainSync { (web.parent as? ViewGroup)?.removeView(web) } }
     }
 
-    @Test fun horizontalPagingRespectsWebControlsAndDnsAppearance() {
+    @Test fun horizontalPagingRespectsWebControls() {
         val instrument = InstrumentationRegistry.getInstrumentation()
         val activity = instrument.startActivitySync(Intent(instrument.targetContext, MainActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) as MainActivity
@@ -146,6 +170,7 @@ class WebGestureTest {
         try {
             assertTrue(loaded.await(10, TimeUnit.SECONDS))
             instrument.waitForIdleSync()
+            awaitViewport(web)
             fun js(code: String): String {
                 val result = CountDownLatch(1)
                 var value = ""
@@ -183,10 +208,6 @@ class WebGestureTest {
             instrument.runOnMainSync { web.swipeEnabled = true; web.canSwipe = { false } }
             drag(true, 80)
             assertEquals(2, directions.size)
-            val css = instrument.targetContext.assets.open("dns-appearance.css").bufferedReader().use { it.readText() }
-            js("var style=document.createElement('style');style.textContent=${org.json.JSONObject.quote(css)};document.head.appendChild(style);true")
-            assertEquals("true", js("getComputedStyle(document.querySelector('input')).borderTopWidth === '0px'"))
-            assertEquals("true", js("getComputedStyle(document.body).fontFamily.includes('sans-serif')"))
             assertEquals("true", js("document.querySelector('input').value='search';document.querySelector('input').value==='search'"))
         } finally {
             instrument.runOnMainSync { (web.parent as? ViewGroup)?.removeView(web); web.destroy() }
