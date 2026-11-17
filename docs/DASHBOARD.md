@@ -2,7 +2,7 @@
 
 源码：https://github.com/gukey/oxidns-dashboard （MIT，基于 Luke-Lab666/oxidns-dashboard）。NetPanel 0.1.4 通过原有 DNS Web 地址加载此面板，不在 APK 内嵌 DNS 或代理核心。
 
-本轮部署固定使用提交 `5d10bd0`，单文件 HTML 内已保留原作者 MIT 许可声明。
+当前部署固定使用提交 `1cc512d`，单文件 HTML 内已保留原作者 MIT 许可声明。默认风格为液态玻璃；已修复手机侧栏被遮罩覆盖而无法选页的问题。
 
 ## 构建与部署
 

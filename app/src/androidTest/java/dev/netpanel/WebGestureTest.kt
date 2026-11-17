@@ -116,11 +116,39 @@ class WebGestureTest {
         }
         // Exercise the dashboard's own header picker in the actual Android WebView.
         js("document.getElementById('btn-style').click();true")
-        for (style in listOf("bento", "liquid", "brutal", "shadcn")) {
+        for (style in listOf("bento", "brutal", "shadcn", "liquid")) {
             js("document.querySelector('[data-style-pick=\"$style\"]').click();true")
             assertEquals("\"$style\"", js("document.documentElement.dataset.style"))
         }
         js("document.getElementById('btn-style').click();true")
+        fun waitJs(condition: String) {
+            val until = SystemClock.uptimeMillis() + 5000
+            while (js(condition) != "true" && SystemClock.uptimeMillis() < until) SystemClock.sleep(100)
+            assertEquals("Menu state: " + js("JSON.stringify({open:document.getElementById('side').className,transform:getComputedStyle(document.getElementById('side')).transform,route:location.hash})"), "true", js(condition))
+        }
+        fun tap(selector: String) {
+            val point = org.json.JSONArray(js("(() => {const r=document.querySelector('$selector').getBoundingClientRect();return [(r.left+r.width/2)/innerWidth,(r.top+r.height/2)/innerHeight]})()"))
+            val start = SystemClock.uptimeMillis()
+            for (action in listOf(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP)) {
+                instrument.runOnMainSync {
+                    assertTrue("NetPanel must have focus before touch input", activity.hasWindowFocus())
+                    web.visibility = android.view.View.VISIBLE
+                    val event = MotionEvent.obtain(start, SystemClock.uptimeMillis(), action,
+                        point.getDouble(0).toFloat() * web.width, point.getDouble(1).toFloat() * web.height, 0)
+                    web.dispatchTouchEvent(event); event.recycle()
+                }
+                SystemClock.sleep(50)
+            }
+        }
+        // Use real WebView touch dispatch; DOM click() bypasses overlay hit testing.
+        for (route in listOf("queries", "force-forward", "overview")) {
+            tap("#menu")
+            waitJs("document.getElementById('side').classList.contains('open')")
+            SystemClock.sleep(300) // Drawer transition before computing the link's touch position.
+            tap("#side a[data-path=\"$route\"]")
+            waitJs("location.hash === '#/$route' && !document.getElementById('side').classList.contains('open')")
+            SystemClock.sleep(300) // Wait for the closing drawer to leave the header hit area.
+        }
         val point = org.json.JSONArray(js("(() => {const r=document.querySelector('#ov-stats').getBoundingClientRect();return [(r.top+40)/innerHeight,innerWidth]})()"))
         try {
             for (left in listOf(true, false)) {

@@ -64,8 +64,10 @@ fun NetPanelApp(model: PanelViewModel, panels: WebPanels) {
             }
         }
     }
-    MaterialTheme(colorScheme = if (dark) darkColorScheme(primary = ProxyBlue, secondary = DnsGreen)
-        else lightColorScheme(primary = ProxyBlue, secondary = DnsGreen, background = Color(0xFFF1F5FA), surface = Color.White)) {
+    MaterialTheme(colorScheme = if (dark) darkColorScheme(primary = Color(0xFF90BAFF), secondary = Color(0xFF77DBBC),
+        background = Color(0xFF0C1422), surface = Color(0xFF19263A), onSurface = Color(0xFFEAF0FC), onSurfaceVariant = Color(0xFFBDCADE))
+        else lightColorScheme(primary = ProxyBlue, secondary = DnsGreen, background = Color(0xFFEDF2F9), surface = Color.White,
+            onSurface = Color(0xFF101425), onSurfaceVariant = Color(0xFF5D6585)), typography = DashboardTypography) {
         if (settings == null) {
             Surface(Modifier.fillMaxSize()) { Box(contentAlignment = Alignment.Center) {
                 if (state.storageError) Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(24.dp)) {
@@ -90,66 +92,72 @@ fun NetPanelApp(model: PanelViewModel, panels: WebPanels) {
             if (showSettings) { model.settingsDraft = null; showSettings = false }
             else if (!panels.back(tab)) tab = 0
         }
-        Scaffold(
-            containerColor = MaterialTheme.colorScheme.background,
-            snackbarHost = { SnackbarHost(snackbar) },
-            topBar = {
-                TopAppBar(title = {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(if (showSettings) PanelIcons.Tune else PanelIcons.Shield, null, tint = ProxyBlue)
-                        Text(if (showSettings) "设置" else listOf("NetPanel", "DNS 管理", "代理管理")[tab], fontWeight = FontWeight.Bold)
-                    }
-                }, navigationIcon = {
-                    if (showSettings) IconButton(onClick = { model.settingsDraft = null; showSettings = false }) { Icon(PanelIcons.ArrowBack, "返回") }
-                }, actions = {
-                    if (!showSettings) {
-                        if (tab != 0) IconButton(onClick = { panels.retry(tab) }) { Icon(PanelIcons.Refresh, "刷新页面") }
-                        IconButton(onClick = { showSettings = true }) { Icon(PanelIcons.Settings, "设置") }
-                    }
-                }, colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background))
-            }, bottomBar = {
-                if (!showSettings) NavigationBar(containerColor = MaterialTheme.colorScheme.surface, tonalElevation = 0.dp) {
-                    val icons = listOf(PanelIcons.Dashboard, PanelIcons.Language, PanelIcons.Hub)
-                    listOf("概览", "DNS", "代理").forEachIndexed { i, title ->
-                        NavigationBarItem(selected = tab == i, onClick = { tab = i }, icon = { Icon(icons[i], title) }, label = { Text(title) },
-                            colors = NavigationBarItemDefaults.colors(selectedIconColor = if (i == 1) DnsGreen else ProxyBlue,
-                                selectedTextColor = if (i == 1) DnsGreen else ProxyBlue))
-                    }
-                }
-            }
-        ) { padding ->
-            Box(Modifier.fillMaxSize().padding(padding).graphicsLayer { alpha = pageAlpha.value }) {
-                // Keep the AndroidView mounted under the native pages, including the settings screen.
-                AndroidView(factory = { context -> FrameLayout(context) }, modifier = Modifier.fillMaxSize(), update = { host ->
-                    panels.configure(settings)
-                    host.visibility = if (showSettings || tab == 0) View.INVISIBLE else View.VISIBLE
-                    for (i in 1..2) {
-                        if (tab == i && !showSettings) {
-                            val web = panels.obtain(i)
-                            (web as SwipeWebView).apply {
-                                swipeEnabled = settings.swipe
-                                canSwipe = { direction -> i + direction in 0..2 }
-                                onSwipe = { direction -> tab = (i + direction).coerceIn(0, 2) }
+        GlassBackdrop {
+            Scaffold(
+                containerColor = Color.Transparent,
+                snackbarHost = { SnackbarHost(snackbar) },
+                topBar = {
+                    TopAppBar(title = {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(if (showSettings) PanelIcons.Tune else PanelIcons.Shield, null, tint = ProxyBlue)
+                            Text(if (showSettings) "设置" else listOf("NetPanel", "DNS 管理", "代理管理")[tab], style = MaterialTheme.typography.titleLarge)
+                        }
+                    }, navigationIcon = {
+                        if (showSettings) IconButton(onClick = { model.settingsDraft = null; showSettings = false }) { Icon(PanelIcons.ArrowBack, "返回") }
+                    }, actions = {
+                        if (!showSettings) {
+                            if (tab != 0) IconButton(onClick = { panels.retry(tab) }) { Icon(PanelIcons.Refresh, "刷新页面") }
+                            IconButton(onClick = { showSettings = true }) { Icon(PanelIcons.Settings, "设置") }
+                        }
+                    }, colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .48f)))
+                }, bottomBar = {
+                    if (!showSettings) Surface(Modifier.padding(horizontal = 12.dp, vertical = 6.dp).glassPanel(28),
+                        shape = RoundedCornerShape(28.dp), color = Color.Transparent) {
+                        NavigationBar(containerColor = Color.Transparent, tonalElevation = 0.dp) {
+                            val icons = listOf(PanelIcons.Dashboard, PanelIcons.Language, PanelIcons.Hub)
+                            listOf("概览", "DNS", "代理").forEachIndexed { i, title ->
+                                NavigationBarItem(selected = tab == i, onClick = { tab = i }, icon = { Icon(icons[i], title) }, label = { Text(title) },
+                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = if (i == 1) DnsGreen else ProxyBlue,
+                                        selectedTextColor = if (i == 1) DnsGreen else ProxyBlue,
+                                        indicatorColor = (if (i == 1) DnsGreen else ProxyBlue).copy(alpha = .12f)))
                             }
-                            if (web.parent !== host) { (web.parent as? android.view.ViewGroup)?.removeView(web); host.addView(web, FrameLayout.LayoutParams(-1, -1)) }
                         }
                     }
-                    for (i in 0 until host.childCount) host.getChildAt(i).visibility =
-                        if (tab in 1..2 && host.getChildAt(i) === panels.obtain(tab)) View.VISIBLE else View.INVISIBLE
-                })
-                if (tab == 0 && !showSettings) {
-                    Overview(state, onTab = { tab = it }, refresh = model::refresh, onSettings = { showSettings = true }, swipe = settings.swipe)
                 }
-                if (tab != 0 && !showSettings) {
-                    val address = if (tab == 1) settings.dnsWeb else settings.proxyWeb
-                    val error = panels.errors[tab]
-                    if (address.isBlank() || error != null) EmptyWeb(
-                        message = if (address.isBlank()) "请先配置 ${if (tab == 1) "OxiDNS" else "MetaCubeXD"} Web 管理地址" else error!!,
-                        retry = if (address.isBlank()) null else ({ panels.retry(tab) }), settings = { showSettings = true },
-                        swipe = settings.swipe, onSwipe = { direction -> tab = (tab + direction).coerceIn(0, 2) })
-                    if (panels.loading[tab] == true && error == null) LinearProgressIndicator(Modifier.fillMaxWidth())
+            ) { padding ->
+                Box(Modifier.fillMaxSize().padding(padding).graphicsLayer { alpha = pageAlpha.value }) {
+                    // Keep the AndroidView mounted under the native pages, including the settings screen.
+                    AndroidView(factory = { context -> FrameLayout(context) }, modifier = Modifier.fillMaxSize(), update = { host ->
+                        panels.configure(settings)
+                        host.visibility = if (showSettings || tab == 0) View.INVISIBLE else View.VISIBLE
+                        for (i in 1..2) {
+                            if (tab == i && !showSettings) {
+                                val web = panels.obtain(i)
+                                (web as SwipeWebView).apply {
+                                    swipeEnabled = settings.swipe
+                                    canSwipe = { direction -> i + direction in 0..2 }
+                                    onSwipe = { direction -> tab = (i + direction).coerceIn(0, 2) }
+                                }
+                                if (web.parent !== host) { (web.parent as? android.view.ViewGroup)?.removeView(web); host.addView(web, FrameLayout.LayoutParams(-1, -1)) }
+                            }
+                        }
+                        for (i in 0 until host.childCount) host.getChildAt(i).visibility =
+                            if (tab in 1..2 && host.getChildAt(i) === panels.obtain(tab)) View.VISIBLE else View.INVISIBLE
+                    })
+                    if (tab == 0 && !showSettings) {
+                        Overview(state, onTab = { tab = it }, refresh = model::refresh, onSettings = { showSettings = true }, swipe = settings.swipe)
+                    }
+                    if (tab != 0 && !showSettings) {
+                        val address = if (tab == 1) settings.dnsWeb else settings.proxyWeb
+                        val error = panels.errors[tab]
+                        if (address.isBlank() || error != null) EmptyWeb(
+                            message = if (address.isBlank()) "请先配置 ${if (tab == 1) "OxiDNS" else "MetaCubeXD"} Web 管理地址" else error!!,
+                            retry = if (address.isBlank()) null else ({ panels.retry(tab) }), settings = { showSettings = true },
+                            swipe = settings.swipe, onSwipe = { direction -> tab = (tab + direction).coerceIn(0, 2) })
+                        if (panels.loading[tab] == true && error == null) LinearProgressIndicator(Modifier.fillMaxWidth())
+                    }
+                    if (showSettings) SettingsPage(settings, model, panels, onSaved = { model.settingsDraft = null; showSettings = false })
                 }
-                if (showSettings) SettingsPage(settings, model, panels, onSaved = { model.settingsDraft = null; showSettings = false })
             }
         }
     }
@@ -178,7 +186,7 @@ private fun EmptyWeb(message: String, retry: (() -> Unit)?, settings: () -> Unit
 
 @Composable
 internal fun PanelCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Surface(modifier, shape = RoundedCornerShape(20.dp), color = MaterialTheme.colorScheme.surface) {
+    Surface(modifier.glassPanel(), shape = RoundedCornerShape(24.dp), color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp), content = content)
     }
 }
@@ -190,7 +198,7 @@ private fun Overview(state: PanelState, onTab: (Int) -> Unit, refresh: () -> Uni
         detectHorizontalDragGestures(onDragStart = { drag = 0f }, onDragEnd = { if (drag < -72.dp.toPx()) onTab(1) },
             onHorizontalDrag = { _, delta -> drag += delta })
     } else Modifier
-    BoxWithConstraints(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).then(gesture).padding(horizontal = 12.dp, vertical = 6.dp)) {
+    BoxWithConstraints(Modifier.fillMaxSize().then(gesture).padding(horizontal = 12.dp, vertical = 6.dp)) {
         val compact = maxHeight < 490.dp
         val last = state.traffic.lastOrNull()
         Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 10.dp)) {
@@ -212,9 +220,9 @@ private fun Overview(state: PanelState, onTab: (Int) -> Unit, refresh: () -> Uni
                 ServiceCard("Mihomo", state.proxy, ProxyBlue, PanelIcons.Hub, Modifier.weight(1f), compact) { onTab(2) }
             }
             TrafficCard(state, Modifier.fillMaxWidth().weight(1f), compact)
-            Surface(shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surface) {
+            Surface(Modifier.glassPanel(), shape = RoundedCornerShape(24.dp), color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
                 Column(Modifier.padding(if (compact) 10.dp else 12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("累计统计 · 本次运行", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                    Text("累计统计 · 本次运行", style = MaterialTheme.typography.titleMedium)
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         TotalValue("DNS 查询", state.dns.queries?.toString() ?: "—", Modifier.weight(1f))
                         TotalValue("DNS 异常", state.dns.queryErrors?.toString() ?: "—", Modifier.weight(1f))
@@ -238,28 +246,33 @@ private fun Overview(state: PanelState, onTab: (Int) -> Unit, refresh: () -> Uni
 private fun TotalValue(label: String, value: String, modifier: Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(3.dp)) {
         Text(label, fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
-        Text(value, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        val amount = value.substringBefore(' ')
+        val unit = value.substringAfter(' ', "")
+        Text(amount, fontSize = 20.sp, lineHeight = 25.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        if (unit.isNotBlank()) Text(unit, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
 @Composable
 private fun ServiceCard(name: String, state: ServiceState, accent: Color, icon: ImageVector, modifier: Modifier, compact: Boolean, onClick: () -> Unit) {
-    Card(onClick = onClick, modifier = modifier, shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
+    Card(onClick = onClick, modifier = modifier.glassPanel(), shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface)) {
         Column(Modifier.padding(if (compact) 10.dp else 12.dp), verticalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 6.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                 Icon(icon, null, Modifier.size(18.dp), tint = accent)
-                Text(name, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text(name, fontWeight = FontWeight.Medium, fontSize = 14.sp)
             }
             val color by animateColorAsState(healthColor(state.health), label = "health")
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 Box(Modifier.size(6.dp).clip(RoundedCornerShape(3.dp)).background(color))
-                Text(state.health.label, color = color, fontSize = 10.sp, maxLines = 1)
-                Text(state.version ?: "版本未提供", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(state.health.label, color = color, fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1)
+                Text(state.version ?: "版本未提供", fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-            Text(if (name == "OxiDNS") "近 ${state.queryWindowSeconds ?: "—"} 秒查询 ${state.recentQueries ?: "—"}" else "节点 ${state.node ?: "未提供"}",
-                fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(if (name == "OxiDNS") "同期异常 ${state.recentErrors ?: "—"}" else "${state.mode ?: "模式未提供"} · 连接 ${state.connections ?: "—"}",
-                fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(if (name == "OxiDNS") "近 ${state.queryWindowSeconds ?: "—"} 秒查询" else "活动连接", style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+            Text(if (name == "OxiDNS") "${state.recentQueries ?: "—"}" else "${state.connections ?: "—"}",
+                fontSize = if (compact) 28.sp else 32.sp, lineHeight = if (compact) 34.sp else 38.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+            Text(if (name == "OxiDNS") "同期异常 ${state.recentErrors ?: "—"}" else "${state.mode ?: "模式未提供"} · ${state.node ?: "节点未提供"}",
+                fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurfaceVariant)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = .5f))
             ResourceLine("运行时长", uptime(state.uptimeMs) ?: "接口未提供")
             ResourceLine("CPU", state.cpu?.let { "%.2f%%".format(it) } ?: "接口未提供")
@@ -271,8 +284,8 @@ private fun ServiceCard(name: String, state: ServiceState, accent: Color, icon: 
 @Composable
 private fun ResourceLine(label: String, value: String) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(label, fontSize = 10.sp, maxLines = 1, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(value, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(label, fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
 
@@ -285,19 +298,19 @@ internal fun InfoRow(label: String, value: String) {
 }
 
 @Composable
-private fun TrafficCard(state: PanelState, modifier: Modifier, compact: Boolean) = Surface(modifier, shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surface) {
+private fun TrafficCard(state: PanelState, modifier: Modifier, compact: Boolean) = Surface(modifier.glassPanel(), shape = RoundedCornerShape(24.dp), color = Color.Transparent, contentColor = MaterialTheme.colorScheme.onSurface) {
     Column(Modifier.fillMaxSize().padding(if (compact) 10.dp else 12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) { while (true) { delay(1000); now = System.currentTimeMillis() } }
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text("Mihomo 实时流量", fontWeight = FontWeight.SemiBold)
+        Text("Mihomo 实时流量", style = MaterialTheme.typography.titleMedium)
         Text("最近 60 秒", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
     val latest = state.traffic.lastOrNull()
     val live = state.trafficLive && latest != null && now - latest.time < 5000
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-        Text("↓ ${if (live) speed(latest!!.down) else "—"}", color = DnsGreen, fontWeight = FontWeight.Bold)
-        Text("↑ ${if (live) speed(latest!!.up) else "—"}", color = ProxyBlue, fontWeight = FontWeight.Bold)
+        Text("↓ ${if (live) speed(latest!!.down) else "—"}", color = DnsGreen, fontSize = if (compact) 18.sp else 22.sp, fontWeight = FontWeight.SemiBold)
+        Text("↑ ${if (live) speed(latest!!.up) else "—"}", color = ProxyBlue, fontSize = if (compact) 18.sp else 22.sp, fontWeight = FontWeight.SemiBold)
     }
     val points = state.traffic
     val grid = MaterialTheme.colorScheme.outlineVariant.copy(alpha = .35f)

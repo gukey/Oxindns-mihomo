@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -29,7 +30,7 @@ fun SettingsPage(initial: Settings, model: PanelViewModel, panels: WebPanels, on
     var confirmCache by remember { mutableStateOf(false) }
     var detecting by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+    Surface(Modifier.fillMaxSize(), color = Color.Transparent) {
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Text("服务配置", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
             OutlinedButton(onClick = {
