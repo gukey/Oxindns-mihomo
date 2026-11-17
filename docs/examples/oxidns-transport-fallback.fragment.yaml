@@ -1,0 +1,16 @@
+# 仅供合并的插件片段，不是可整份替换的配置。
+# 前提：已有 china_sequence（含国内缓存）和 remote_sequence。
+# 将 main 内匹配 $china_domains 的那一步：
+#   exec: $china_sequence
+# 改为：
+#   exec: $china_transport_fallback
+# 保留 direct / NCSI 对原序列的调用；不要全局替换标签。
+# 阈值按本次国内上游 5s 超时设计；改变超时后须重新核对总等待预算。
+plugins:
+  - tag: china_transport_fallback
+    type: fallback
+    args:
+      primary: china_sequence
+      secondary: remote_sequence
+      threshold: 6000
+      always_standby: false

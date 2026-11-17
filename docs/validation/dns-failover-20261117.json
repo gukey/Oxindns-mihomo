@@ -1,0 +1,158 @@
+{
+  "date": "2026-11-17",
+  "deployed": true,
+  "production_network_switch_tested": false,
+  "fixture_client_transport": "TCP",
+  "fixture_query_count": 21,
+  "fixture_cases": [
+    {
+      "case": "ok",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 73.44
+    },
+    {
+      "case": "servfail",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 151.78
+    },
+    {
+      "case": "refused",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 80.22
+    },
+    {
+      "case": "nxdomain",
+      "rcode": 3,
+      "answers": 0,
+      "ms": 151.53
+    },
+    {
+      "case": "close",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 129.44
+    },
+    {
+      "case": "timeout",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 650.31
+    },
+    {
+      "case": "doubletimeout",
+      "rcode": 2,
+      "answers": 0,
+      "ms": 1035.24
+    },
+    {
+      "case": "oneslow",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 115.23
+    },
+    {
+      "case": "ok",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 205.81
+    },
+    {
+      "case": "domestic_AAAA",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 106.98
+    },
+    {
+      "case": "failed_domestic_AAAA",
+      "rcode": 0,
+      "answers": 0,
+      "ms": 515.09
+    },
+    {
+      "case": "manual_direct_fail_closed",
+      "rcode": 2,
+      "answers": 0,
+      "ms": 528.63
+    },
+    {
+      "case": "ncsi_fail_closed",
+      "rcode": 2,
+      "answers": 0,
+      "ms": 542.18
+    },
+    {
+      "case": "remote_AAAA_preserved",
+      "rcode": 0,
+      "answers": 0,
+      "ms": 54.63
+    },
+    {
+      "case": "fallback_ttl120",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 184.32
+    },
+    {
+      "case": "fallback_not_in_domestic_cache",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 61.95
+    },
+    {
+      "case": "fresh_cache_seed",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 176.69
+    },
+    {
+      "case": "fresh_cache_retained",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 53.47
+    },
+    {
+      "case": "lazy_cache_retained",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 48.0
+    },
+    {
+      "case": "production_5s_timeout",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 5115.59
+    },
+    {
+      "case": "recovered_after_5s",
+      "rcode": 0,
+      "answers": 1,
+      "ms": 191.95
+    }
+  ],
+  "postinstall_live_queries": 26,
+  "observation_seconds": 121.302,
+  "observation_probe_queries": 156,
+  "observation_query_delta": 435.0,
+  "observation_query_error_delta": 0.0,
+  "fallback_primary_delta": 198.0,
+  "fallback_secondary_delta": 0.0,
+  "downloads": [
+    {
+      "mode": "direct",
+      "result": "HTTP=200;BYTES=386895;TOTAL=2.917817",
+      "xml_valid": true,
+      "bytes": 386895
+    },
+    {
+      "mode": "proxy",
+      "result": "HTTP=200;BYTES=386895;TOTAL=2.219589",
+      "xml_valid": true,
+      "bytes": 386895
+    }
+  ],
+  "initial_download_tls_error_observed": true,
+  "production_config_hash": "ac916ba251608db5605c8e8020130ff9809b0310ce268d8dae6f5800be2b1fb6"
+}

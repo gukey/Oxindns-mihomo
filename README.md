@@ -10,6 +10,7 @@
 - [自动学习的保守重设计](docs/SAFE-DNS-MEMORY.md)：原生能力限制、TTL 应答缓存、候选观察与隔离验证；不自动改写路由。
 - [11 月 17 日配置复核](docs/CONFIG-REVIEW-20261117.md)：昨晚部署与在线配置核对、CDN 下载回归、国内 DoH 超时及缓存候选结论。
 - [切网恢复与错误回退检查](docs/DNS-RECOVERY-CHECK-20261117.md)：传输错误中断序列的复现、原生 fallback 隔离候选及 H2 连接恢复的验证边界。
+- [DNS 兜底部署与测试](docs/DNS-FAILOVER-DEPLOYMENT-20261117.md)：手机已部署的普通国内解析错误回退、缓存隔离及真机回归，附脱敏合并片段。
 - [通用配置文件](root-module/config) / [发布验证记录](docs/RELEASE-0.1.3.md) / [第三方来源与许可证](docs/THIRD_PARTY.md)
 
 APP 本身不需要 Root，也不启动核心；**可选的独立 Root 模块**负责开机启动。默认配置不含节点和订阅，仅 DIRECT，不自动接管手机流量。模块带官方 OxiDNS WebUI，不复制设备上的 YoPilot 定制版本。模块仅支持 arm64，首次发布标记为预发布，实际验收范围见验证记录。
