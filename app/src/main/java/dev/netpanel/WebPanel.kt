@@ -35,10 +35,10 @@ class WebPanels(private val activity: MainActivity, private val restored: Bundle
         private set
     private var released = false
     private val proxyAppearance by lazy { activity.assets.open("proxy-appearance.css").bufferedReader().use { it.readText() } }
+    private val dnsAppearance by lazy { activity.assets.open("dns-appearance.css").bufferedReader().use { it.readText() } }
     private fun applyAppearance(view: WebView, index: Int) {
-        if (index != 2) return // DNS dashboard owns its typography and theme.
-        val css = org.json.JSONObject.quote(proxyAppearance)
-        val id = "netpanel-proxy-appearance"
+        val css = org.json.JSONObject.quote(if (index == 1) dnsAppearance else proxyAppearance)
+        val id = if (index == 1) "netpanel-dns-appearance" else "netpanel-proxy-appearance"
         view.evaluateJavascript("""
             (() => {
               let style = document.getElementById('$id');

@@ -1,4 +1,18 @@
-# NetPanel 0.1.5 实际验证记录
+# NetPanel 0.1.7 实际验证记录
+
+日期：2026-11-17。包名 `dev.netpanel`，versionCode 8。
+
+- 用户最终选择恢复 Web 后台并保留悬浮底栏。原生 DNS / Mihomo 试作不纳入提交，最终 APK 已检查不含该试作的管理页面类；未引入 YAML 解析或新的管理 API 依赖。
+- `assembleDebug testDebugUnitTest lintDebug assembleDebugAndroidTest` 通过，13 项单元测试通过，Lint 0 错误、8 项既有警告。
+- 5 项真机测试通过，耗时 8.993 秒：OxiDNS 与 Mihomo 真实指标、DNS 外观/菜单真实触摸和双向侧滑、网页横向控件及输入框手势优先、MetaCubeXD 更多按钮边界。
+- DNS 强制转发页面额外检查实际 textarea 的圆角和内边距均为 12px。样式仅在 APP WebView 中应用；浏览器服务文件不变。触摸测试在发送事件前确认 NetPanel 获得窗口焦点。
+- 真机截图确认代理页加载原 MetaCubeXD，网页导航和原生悬浮栏同时可见；底栏透明、上下缩窄，与系统底部保留间隙。首页顶部查询和连接标题/数值居中。
+- 两个核心配置与强制转发状态的 SHA-256 与此前基线一致；独立 DNS 浏览器页面仍为 `1cc512d` 对应的原部署内容，未覆盖或删除 Web 后台。
+- 最终 APK 签名校验通过，SHA-256：`a786d4b696715574ef2fe5f6d9d20288dd66836ce85a286c31335049c2519cfa`。已覆盖安装 0.1.7 并保留加密设置，同时复制到手机 Download。
+
+交付：`dist/release-0.1.7/`；报告：`dist/reports/0.1.7/`。截图仅保存在本机忽略目录，不提交实际节点信息。本轮验证目标手机竖屏，未覆盖跨 Android 版本、横屏或超大字体完整矩阵。Root 模块保持原版本。
+
+## 0.1.5 历史验证记录
 
 日期：2026-11-17。包名 `dev.netpanel`，versionCode 6。
 

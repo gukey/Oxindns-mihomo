@@ -92,7 +92,7 @@ class WebGestureTest {
                     (() => {
                       return !!document.querySelector('#side a[data-path="force-forward"]') &&
                         !!document.querySelector('#btn-style') &&
-                        !document.getElementById('netpanel-dns-appearance') &&
+                        !!document.getElementById('netpanel-dns-appearance') &&
                         getComputedStyle(document.body).fontFamily.includes('sans-serif');
                     })()
                 """.trimIndent()) { ready = it == "true"; done.countDown() }
@@ -100,7 +100,7 @@ class WebGestureTest {
             assertTrue(done.await(5, TimeUnit.SECONDS))
             if (!ready) SystemClock.sleep(200)
         }
-        assertTrue("New DNS dashboard did not load or legacy CSS is still injected", ready)
+        assertTrue("DNS dashboard or APP input appearance did not load", ready)
         awaitViewport(web)
         val swipeWeb = web as SwipeWebView
         val directions = mutableListOf<Int>()
@@ -148,6 +148,7 @@ class WebGestureTest {
             tap("#side a[data-path=\"$route\"]")
             waitJs("location.hash === '#/$route' && !document.getElementById('side').classList.contains('open')")
             SystemClock.sleep(300) // Wait for the closing drawer to leave the header hit area.
+            if (route == "force-forward") waitJs("(() => {const e=document.querySelector('.fp-editor textarea');return !!e && getComputedStyle(e).borderRadius==='12px' && getComputedStyle(e).paddingTop==='12px'})()")
         }
         val point = org.json.JSONArray(js("(() => {const r=document.querySelector('#ov-stats').getBoundingClientRect();return [(r.top+40)/innerHeight,innerWidth]})()"))
         try {
@@ -157,6 +158,7 @@ class WebGestureTest {
                 val x1 = web.width * if (left) .8f else .2f
                 val x2 = web.width * if (left) .2f else .8f
                 fun send(action: Int, x: Float) = instrument.runOnMainSync {
+                    assertTrue("NetPanel must have focus before touch input", activity.hasWindowFocus())
                     val event = MotionEvent.obtain(start, SystemClock.uptimeMillis(), action, x, y, 0)
                     web.dispatchTouchEvent(event); event.recycle()
                 }
@@ -213,6 +215,7 @@ class WebGestureTest {
                 val x2 = web.width * if (left) .2f else .8f
                 val y = yDp * density
                 fun send(action: Int, x: Float, targetY: Float) = instrument.runOnMainSync {
+                    assertTrue("NetPanel must have focus before touch input", activity.hasWindowFocus())
                     val event = MotionEvent.obtain(start, SystemClock.uptimeMillis(), action, x, targetY, 0)
                     web.dispatchTouchEvent(event); event.recycle()
                 }

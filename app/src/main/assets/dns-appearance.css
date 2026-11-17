@@ -1,0 +1,6 @@
+/* APP-only: the dashboard's liquid theme uses pill radii for buttons.
+   A multiline rule editor must keep a rectangular writing area. */
+.fp-editor textarea {
+  border-radius: 12px !important;
+  padding: 12px !important;
+}

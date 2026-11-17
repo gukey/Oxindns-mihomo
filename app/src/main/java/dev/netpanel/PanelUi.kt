@@ -31,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -111,15 +112,17 @@ fun NetPanelApp(model: PanelViewModel, panels: WebPanels) {
                         }
                     }, colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = .48f)))
                 }, bottomBar = {
-                    if (!showSettings) Surface(Modifier.padding(horizontal = 12.dp, vertical = 6.dp).glassPanel(28),
-                        shape = RoundedCornerShape(28.dp), color = Color.Transparent) {
-                        NavigationBar(containerColor = Color.Transparent, tonalElevation = 0.dp) {
-                            val icons = listOf(PanelIcons.Dashboard, PanelIcons.Language, PanelIcons.Hub)
-                            listOf("概览", "DNS", "代理").forEachIndexed { i, title ->
-                                NavigationBarItem(selected = tab == i, onClick = { tab = i }, icon = { Icon(icons[i], title) }, label = { Text(title) },
-                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = if (i == 1) DnsGreen else ProxyBlue,
-                                        selectedTextColor = if (i == 1) DnsGreen else ProxyBlue,
-                                        indicatorColor = (if (i == 1) DnsGreen else ProxyBlue).copy(alpha = .12f)))
+                    if (!showSettings) Box(Modifier.navigationBarsPadding().padding(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 10.dp)) {
+                        Surface(Modifier.fillMaxWidth().glassPanel(28, .45f),
+                            shape = RoundedCornerShape(28.dp), color = Color.Transparent) {
+                            NavigationBar(modifier = Modifier.height(64.dp), windowInsets = WindowInsets(0, 0, 0, 0), containerColor = Color.Transparent, tonalElevation = 0.dp) {
+                                val icons = listOf(PanelIcons.Dashboard, PanelIcons.Language, PanelIcons.Hub)
+                                listOf("概览", "DNS", "代理").forEachIndexed { i, title ->
+                                    NavigationBarItem(selected = tab == i, onClick = { tab = i }, icon = { Icon(icons[i], title, Modifier.size(20.dp)) }, label = { Text(title, style = MaterialTheme.typography.labelSmall) },
+                                        colors = NavigationBarItemDefaults.colors(selectedIconColor = if (i == 1) DnsGreen else ProxyBlue,
+                                            selectedTextColor = if (i == 1) DnsGreen else ProxyBlue,
+                                            indicatorColor = (if (i == 1) DnsGreen else ProxyBlue).copy(alpha = .12f)))
+                                }
                             }
                         }
                     }
@@ -267,9 +270,10 @@ private fun ServiceCard(name: String, state: ServiceState, accent: Color, icon: 
                 Text(state.health.label, color = color, fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1)
                 Text(state.version ?: "版本未提供", fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-            Text(if (name == "OxiDNS") "近 ${state.queryWindowSeconds ?: "—"} 秒查询" else "活动连接", style = MaterialTheme.typography.bodySmall,
+            Text(if (name == "OxiDNS") "近 ${state.queryWindowSeconds ?: "—"} 秒查询" else "活动连接", Modifier.fillMaxWidth(), textAlign = TextAlign.Center, style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
             Text(if (name == "OxiDNS") "${state.recentQueries ?: "—"}" else "${state.connections ?: "—"}",
+                modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center,
                 fontSize = if (compact) 28.sp else 32.sp, lineHeight = if (compact) 34.sp else 38.sp, fontWeight = FontWeight.Bold, maxLines = 1)
             Text(if (name == "OxiDNS") "同期异常 ${state.recentErrors ?: "—"}" else "${state.mode ?: "模式未提供"} · ${state.node ?: "节点未提供"}",
                 fontSize = 11.sp, lineHeight = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onSurfaceVariant)

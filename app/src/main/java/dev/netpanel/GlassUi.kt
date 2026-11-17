@@ -39,13 +39,13 @@ internal fun GlassBackdrop(content: @Composable BoxScope.() -> Unit) {
 private fun Color.luminanceIsDark() = red + green + blue < 1.5f
 
 @Composable
-internal fun Modifier.glassPanel(radius: Int = 24): Modifier {
+internal fun Modifier.glassPanel(radius: Int = 24, opacity: Float = 1f): Modifier {
     val scheme = MaterialTheme.colorScheme
     val dark = scheme.background.luminanceIsDark()
     val shape = RoundedCornerShape(radius.dp)
     val top = if (dark) Color(0xFF26354B).copy(alpha = .88f) else Color.White.copy(alpha = .64f)
     val bottom = if (dark) Color(0xFF172235).copy(alpha = .78f) else Color.White.copy(alpha = .43f)
     return shadow(8.dp, shape, ambientColor = Color(0xFF263B66).copy(alpha = .09f), spotColor = Color(0xFF263B66).copy(alpha = .09f))
-        .background(Brush.verticalGradient(listOf(top, bottom)), shape)
-        .border(1.dp, Color.White.copy(alpha = if (dark) .14f else .8f), shape)
+        .background(Brush.verticalGradient(listOf(top.copy(alpha = top.alpha * opacity), bottom.copy(alpha = bottom.alpha * opacity))), shape)
+        .border(1.dp, Color.White.copy(alpha = (if (dark) .14f else .8f) * opacity), shape)
 }
