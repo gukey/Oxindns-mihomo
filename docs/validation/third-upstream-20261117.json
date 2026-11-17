@@ -1,0 +1,460 @@
+{
+  "date": "2026-11-17",
+  "third_upstream_deployed": false,
+  "production_configs_unchanged": true,
+  "production_processes_and_selections_unchanged": true,
+  "fixture_query_count": 24,
+  "fixture_cases": [
+    {
+      "mode": "normal",
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 10.51
+    },
+    {
+      "mode": "normal",
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 74.85
+    },
+    {
+      "mode": "normal",
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 11.43
+    },
+    {
+      "mode": "doh_timeout",
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_fake_ip",
+      "ms": 515.1
+    },
+    {
+      "mode": "doh_timeout",
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 14.66
+    },
+    {
+      "mode": "doh_timeout",
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 522.22
+    },
+    {
+      "mode": "udp_timeout",
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 15.54
+    },
+    {
+      "mode": "udp_timeout",
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 61.06
+    },
+    {
+      "mode": "udp_timeout",
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 28.51
+    },
+    {
+      "mode": "all_timeout",
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_fake_ip",
+      "ms": 525.49
+    },
+    {
+      "mode": "all_timeout",
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_fake_ip",
+      "ms": 578.03
+    },
+    {
+      "mode": "all_timeout",
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_fake_ip",
+      "ms": 1021.54
+    },
+    {
+      "mode": "udp_nxdomain_slow_doh",
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 357.34
+    },
+    {
+      "mode": "udp_nxdomain_slow_doh",
+      "variant": "race",
+      "rcode": 3,
+      "answer_source": "none",
+      "ms": 165.38
+    },
+    {
+      "mode": "udp_nxdomain_slow_doh",
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 282.29
+    },
+    {
+      "mode": "doh_nxdomain",
+      "variant": "base",
+      "rcode": 3,
+      "answer_source": "none",
+      "ms": 14.31
+    },
+    {
+      "mode": "doh_nxdomain",
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 10.83
+    },
+    {
+      "mode": "doh_nxdomain",
+      "variant": "standby",
+      "rcode": 3,
+      "answer_source": "none",
+      "ms": 89.75
+    },
+    {
+      "mode": "servfail",
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_fake_ip",
+      "ms": 15.72
+    },
+    {
+      "mode": "servfail",
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 17.83
+    },
+    {
+      "mode": "servfail",
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 56.28
+    },
+    {
+      "mode": "normal",
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 50.5
+    },
+    {
+      "mode": "normal",
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 12.93
+    },
+    {
+      "mode": "normal",
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_domestic",
+      "ms": 18.17
+    }
+  ],
+  "production_timeout_fixture_count": 3,
+  "production_timeout_fixture": [
+    {
+      "variant": "base",
+      "rcode": 0,
+      "answer_source": "fixture_fake_ip",
+      "ms": 5043.52
+    },
+    {
+      "variant": "race",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 10.38
+    },
+    {
+      "variant": "standby",
+      "rcode": 0,
+      "answer_source": "fixture_udp",
+      "ms": 5072.25
+    }
+  ],
+  "prefer_positive_supplement": [
+    {
+      "mode": "udp_nxdomain_slow_doh",
+      "rcode": 0,
+      "ms": 462.55
+    },
+    {
+      "mode": "doh_nxdomain",
+      "rcode": 0,
+      "ms": 19.1
+    }
+  ],
+  "interception": {
+    "nominal_target": "180.184.1.1:53",
+    "query": "www.google.com",
+    "returned_fake_ip": true,
+    "focused_loopback_reply_packets": 1,
+    "physical_egress_proven": false,
+    "output_redirect_to_local_dns_confirmed": true
+  },
+  "real_trials": [
+    {
+      "phase": "with_local_cache",
+      "queries_counted": 360,
+      "valid_external_upstream_comparison": false,
+      "invalid_reason": "UDP 53 was redirected into production local DNS; caches and paths are not equivalent",
+      "summary_not_for_speedup_claims": {
+        "CDN_A": {
+          "base": {
+            "n": 24,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 56.62,
+            "p95_ms": 122.63
+          },
+          "race": {
+            "n": 24,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 18.61,
+            "p95_ms": 108.21
+          },
+          "standby": {
+            "n": 24,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 41.855,
+            "p95_ms": 79.75
+          },
+          "race_minus_base_round_median": {
+            "median_ms": -8.793,
+            "round_block_bootstrap_95pct_ms": [
+              -34.105,
+              0.61
+            ]
+          },
+          "standby_minus_base_round_median": {
+            "median_ms": -8.308,
+            "round_block_bootstrap_95pct_ms": [
+              -63.532,
+              8.363
+            ]
+          }
+        },
+        "domestic_A": {
+          "base": {
+            "n": 60,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 46.06,
+            "p95_ms": 136.58
+          },
+          "race": {
+            "n": 60,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 49.545,
+            "p95_ms": 141.5
+          },
+          "standby": {
+            "n": 60,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 45.045,
+            "p95_ms": 120.81
+          },
+          "race_minus_base_round_median": {
+            "median_ms": -0.475,
+            "round_block_bootstrap_95pct_ms": [
+              -20.86,
+              4.79
+            ]
+          },
+          "standby_minus_base_round_median": {
+            "median_ms": 1.405,
+            "round_block_bootstrap_95pct_ms": [
+              -23.26,
+              24.18
+            ]
+          }
+        },
+        "domestic_AAAA": {
+          "base": {
+            "n": 36,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 38.86,
+            "p95_ms": 118.71
+          },
+          "race": {
+            "n": 36,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 38.14,
+            "p95_ms": 87.25
+          },
+          "standby": {
+            "n": 36,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 32.945,
+            "p95_ms": 95.06
+          },
+          "race_minus_base_round_median": {
+            "median_ms": 6.62,
+            "round_block_bootstrap_95pct_ms": [
+              -33.38,
+              31.615
+            ]
+          },
+          "standby_minus_base_round_median": {
+            "median_ms": -20.095,
+            "round_block_bootstrap_95pct_ms": [
+              -34.14,
+              11.485
+            ]
+          }
+        }
+      }
+    },
+    {
+      "phase": "without_local_cache",
+      "queries_counted": 360,
+      "valid_external_upstream_comparison": false,
+      "invalid_reason": "UDP 53 was redirected into production local DNS; caches and paths are not equivalent",
+      "summary_not_for_speedup_claims": {
+        "CDN_A": {
+          "base": {
+            "n": 24,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 86.085,
+            "p95_ms": 187.02
+          },
+          "race": {
+            "n": 24,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 21.27,
+            "p95_ms": 68.06
+          },
+          "standby": {
+            "n": 24,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 124.505,
+            "p95_ms": 223.17
+          },
+          "race_minus_base_round_median": {
+            "median_ms": -75.602,
+            "round_block_bootstrap_95pct_ms": [
+              -105.32,
+              -43.71
+            ]
+          },
+          "standby_minus_base_round_median": {
+            "median_ms": 13.77,
+            "round_block_bootstrap_95pct_ms": [
+              -9.26,
+              79.835
+            ]
+          }
+        },
+        "domestic_A": {
+          "base": {
+            "n": 60,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 100.355,
+            "p95_ms": 197.48
+          },
+          "race": {
+            "n": 60,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 24.095,
+            "p95_ms": 139.68
+          },
+          "standby": {
+            "n": 60,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 102.625,
+            "p95_ms": 213.51
+          },
+          "race_minus_base_round_median": {
+            "median_ms": -59.5,
+            "round_block_bootstrap_95pct_ms": [
+              -100.4,
+              -42.845
+            ]
+          },
+          "standby_minus_base_round_median": {
+            "median_ms": 9.28,
+            "round_block_bootstrap_95pct_ms": [
+              -17.795,
+              50.975
+            ]
+          }
+        },
+        "domestic_AAAA": {
+          "base": {
+            "n": 36,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 86.04,
+            "p95_ms": 172.4
+          },
+          "race": {
+            "n": 36,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 21.095,
+            "p95_ms": 101.68
+          },
+          "standby": {
+            "n": 36,
+            "errors": 0,
+            "nonzero_rcode": 0,
+            "p50_ms": 89.14,
+            "p95_ms": 184.76
+          },
+          "race_minus_base_round_median": {
+            "median_ms": -64.2,
+            "round_block_bootstrap_95pct_ms": [
+              -84.89,
+              -46.89
+            ]
+          },
+          "standby_minus_base_round_median": {
+            "median_ms": -2.45,
+            "round_block_bootstrap_95pct_ms": [
+              -28.18,
+              41.505
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "total_counted_real_queries": 720,
+  "real_trials_eligible_for_external_speedup_claim": false
+}
